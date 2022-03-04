@@ -1,11 +1,13 @@
-﻿using Voltage = design_patterns_lightning_talks.Behaviorals.Strategy.Voltage;
-using Taxes = design_patterns_lightning_talks.Behaviorals.Strategy.Taxes;
-using Shipping = design_patterns_lightning_talks.Behaviorals.Strategy.Shipping;
-using design_patterns_lightning_talks.Behaviorals.Strategy.Taxes.Old.Enums;
+﻿using ShippingOld = design_patterns_lightning_talks.Behaviorals.Strategy.Shipping.Old;
+using TaxesOld = design_patterns_lightning_talks.Behaviorals.Strategy.Taxes.Old;
+using VoltageOld = design_patterns_lightning_talks.Behaviorals.Strategy.Voltage.Old;
+using ShippingSolution = design_patterns_lightning_talks.Behaviorals.Strategy.Shipping.Solution;
+using TaxesSolution = design_patterns_lightning_talks.Behaviorals.Strategy.Taxes.Solution;
+using VoltageSolution = design_patterns_lightning_talks.Behaviorals.Strategy.Voltage.Solution;
 
 #region VOLTAGE 
 // OLD
-var transformerOld = new Voltage.Old.Entities.Transformer
+var transformerOld = new VoltageOld.Entities.Transformer
 {
     Id = Guid.NewGuid(),
     Name = "TF1",
@@ -14,12 +16,12 @@ var transformerOld = new Voltage.Old.Entities.Transformer
     Power3 = 12,
 };
 
-var voltageOld = Voltage.Old.VoltageCalculator.GetVoltage(transformerOld);
+var voltageOld = VoltageOld.VoltageCalculator.GetVoltage(transformerOld);
 
-Console.WriteLine(voltageOld);
+Console.WriteLine($"Voltage [OLD]: {voltageOld}");
 
 //Solution
-var transformerSolution = new Voltage.Solution.Entities.Transformer
+var transformerSolution = new VoltageSolution.Entities.Transformer
 {
     Id = Guid.NewGuid(),
     Name = "TF1",
@@ -28,55 +30,59 @@ var transformerSolution = new Voltage.Solution.Entities.Transformer
     Power3 = 12,
 };
 
-var voltageSolution = Voltage.Solution.VoltageCalculator.GetVoltage(transformerSolution);
+var voltageSolution = VoltageSolution.VoltageCalculator.GetVoltage(transformerSolution);
 
-Console.WriteLine(voltageSolution);
+Console.WriteLine($"Voltage [SOLUTION]: {voltageSolution}");
 
 #endregion
 
-
 #region TAXES
 // Old
-var orderOld = new Taxes.Old.Entities.Order(
-    Taxes.Old.Enums.BankIds.Bradesco
+var orderOld = new TaxesOld.Entities.Order(
+    TaxesOld.Enums.BankIds.Bradesco
 );
 
-var taxesOld = Taxes.Old.TaxesCalculator.CalculateTax(orderOld);
+orderOld.ItemsPrice = new List<double> { 1, 2, 5, 6, 7 };
 
-Console.WriteLine(taxesOld);
+var taxesOld = TaxesOld.TaxesCalculator.CalculateTax(orderOld);
+
+Console.WriteLine($"Taxes [OLD]: {taxesOld}");
 
 // Solution
-var orderSolution = new Taxes.Solution.Entities.Order(
-    Taxes.Solution.Enums.BankIds.Bradesco
+var orderSolution = new TaxesSolution.Entities.Order(
+    TaxesSolution.Enums.BankIds.Bradesco
 );
 
-var bankSolution = new Taxes.Solution.Entities.BradescoTaxes();
+orderSolution.ItemsPrice = new List<double> { 1, 2, 5, 6, 7 };
 
-var taxesCalculatorSolution = new Taxes.Solution.TaxesCalculator(bankSolution);
+var bankSolution = new TaxesSolution.Entities.BradescoTaxes();
+
+var taxesCalculatorSolution = new TaxesSolution.TaxesCalculator(bankSolution);
 
 var taxesSolution = taxesCalculatorSolution.CalculateTax(orderSolution);
 
-Console.WriteLine(taxesSolution);
+Console.WriteLine($"Taxes [SOLUTION]: {taxesSolution}");
 #endregion
 
 #region SHIPPING
 // Old
-var shippingOld = new Shipping.Old.Entities.EletronicOrder();
+var eletronicOrderOld = new ShippingOld.Entities.EletronicOrder();
+eletronicOrderOld.Total = 1000;
 
-var taxesOld = Taxes.Old.TaxesCalculator.CalculateTax(orderOld);
+var eletronicOrderExpressShippingOld = eletronicOrderOld.CalculateExpressShipping();
 
-Console.WriteLine(taxesOld);
+Console.WriteLine($"Shipping [OLD]: {eletronicOrderExpressShippingOld}");
 
 // Solution
-var orderSolution = new Taxes.Solution.Entities.Order(
-    Taxes.Solution.Enums.BankIds.Bradesco
+var normalShipping = new ShippingSolution.Shipping.ExpressShipping();
+
+var eletronicOrderSolution = new ShippingSolution.Entities.EletronicOrder(
+    normalShipping
 );
 
-var bankSolution = new Taxes.Solution.Entities.BradescoTaxes();
+eletronicOrderSolution.Total = 1000;
 
-var taxesCalculatorSolution = new Taxes.Solution.TaxesCalculator(bankSolution);
+var eletronicOrderExpressShippingSolution = eletronicOrderSolution.CalculateShipping();
 
-var taxesSolution = taxesCalculatorSolution.CalculateTax(orderSolution);
-
-Console.WriteLine(taxesSolution);
+Console.WriteLine($"Shipping [SOLUTION]: {eletronicOrderExpressShippingSolution}");
 #endregion
