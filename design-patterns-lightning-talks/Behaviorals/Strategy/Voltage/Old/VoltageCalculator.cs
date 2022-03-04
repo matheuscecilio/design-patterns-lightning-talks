@@ -1,4 +1,4 @@
-﻿using design_patterns_lightning_talks.Behaviorals.Strategy.Voltage.Entities.Old;
+﻿using design_patterns_lightning_talks.Behaviorals.Strategy.Voltage.Old.Entities;
 
 namespace design_patterns_lightning_talks.Behaviorals.Strategy.Voltage.Old
 {
